@@ -1,0 +1,57 @@
+{
+  "name": "crypts-and-caverns",
+  "version": "1.0",
+  "description": "9000 generative on-chain dungeon maps on the Ethereum blockchain.",
+  "scripts": {
+    "build": "npx hardhat compile; npx hardhat run scripts/build.js",
+    "buildwatch": "watch 'npm run build' ./contracts ./scripts",
+    "buildlocal": "npx hardhat compile; npx hardhat run scripts/build.js --network localhost",
+    "build100": "npx hardhat run scripts/100.js",
+    "build100watch": "watch 'npm run 100' ./contracts ./scripts",
+    "build100local": "npx hardhat run scripts/100.js --network localhost",
+    "render": "npx hardhat compile; npx hardhat run scripts/render.js",
+    "renderwatch": "watch 'npm run render' ./contracts ./scripts",
+    "renderlocal": "npx hardhat compile; npx hardhat run scripts/render.js --network localhost",
+    "test": "npx hardhat test",
+    "testwatch": "watch 'npx hardhat test' ./contracts ./test",
+    "gas": "npx hardhat compile; npx hardhat run scripts/gas.js --network localhost",
+    "stubloot": "npx hardhat run ./scripts/stubloot.js",
+    "stublootlocal": "npx hardhat run ./scripts/stubloot.js --network localhost",
+    "node": "npx hardhat node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:threepwave/cryptsandcaverns.git"
+  },
+  "author": "threepwave",
+  "license": "CC-0",
+  "devDependencies": {
+    "@nomiclabs/hardhat-etherscan": "^2.1.7",
+    "ethereum-waffle": "^3.4.0",
+    "chai": "^4.3.4",
+    "ethers": "^5.4.6",
+    "hardhat": "^2.6.4",
+    "hardhat-deploy": "^0.9.8",
+    "hardhat-deploy-ethers": "^0.3.0-beta.11",
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "@openzeppelin/contracts": "^4.3.2",
+    "@symblox/hardhat-abi-gen": "^0.2.0",
+    "watch": "^1.0.2"
+  },
+  "watch": {
+    "build": {
+      "patterns": [
+        "./contracts",
+        "./scripts"
+      ]
+    },
+    "test": {
+      "patterns": [
+        "contracts",
+        "test"
+      ]
+    }
+  }
+}

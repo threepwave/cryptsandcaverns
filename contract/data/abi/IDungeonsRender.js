@@ -1,0 +1,183 @@
+export default [
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "size",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "environment",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "structure",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "legendary",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "layout",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8[]",
+                "name": "x",
+                "type": "uint8[]"
+              },
+              {
+                "internalType": "uint8[]",
+                "name": "y",
+                "type": "uint8[]"
+              },
+              {
+                "internalType": "uint8[]",
+                "name": "entityType",
+                "type": "uint8[]"
+              }
+            ],
+            "internalType": "struct IDungeons.EntityData",
+            "name": "entities",
+            "type": "tuple"
+          },
+          {
+            "internalType": "string",
+            "name": "affinity",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "dungeonName",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct IDungeons.Dungeon",
+        "name": "dungeon",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "x",
+        "type": "uint8[]"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "y",
+        "type": "uint8[]"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "entityData",
+        "type": "uint8[]"
+      }
+    ],
+    "name": "draw",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "size",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "environment",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "structure",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "legendary",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "layout",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8[]",
+                "name": "x",
+                "type": "uint8[]"
+              },
+              {
+                "internalType": "uint8[]",
+                "name": "y",
+                "type": "uint8[]"
+              },
+              {
+                "internalType": "uint8[]",
+                "name": "entityType",
+                "type": "uint8[]"
+              }
+            ],
+            "internalType": "struct IDungeons.EntityData",
+            "name": "entities",
+            "type": "tuple"
+          },
+          {
+            "internalType": "string",
+            "name": "affinity",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "dungeonName",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct IDungeons.Dungeon",
+        "name": "dungeon",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "entities",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
