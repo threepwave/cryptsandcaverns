@@ -4,8 +4,11 @@
 
 ## Sub-folders
 `/contracts` - Solidity contracts as deployed on-chain
+
 `/examples` - Example code and proofs of concept for working with the project.
+
 `/website` - threepwave.com website including the Crypts and Caverns website.
+
 
 ## Learn more
 
