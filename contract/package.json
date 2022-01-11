@@ -15,6 +15,8 @@
     "test": "npx hardhat test",
     "testwatch": "watch 'npx hardhat test' ./contracts ./test",
     "gas": "npx hardhat compile; npx hardhat run scripts/gas.js --network localhost",
+    "staking": "npx hardhat run ./scripts/staking/stake.js",
+    "stakingwatch": "watch 'npx hardhat run ./scripts/staking/stake.js' ./contracts ./scripts",
     "stubloot": "npx hardhat run ./scripts/stubloot.js",
     "stublootlocal": "npx hardhat run ./scripts/stubloot.js --network localhost",
     "node": "npx hardhat node"
