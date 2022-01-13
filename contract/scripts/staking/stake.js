@@ -31,17 +31,28 @@ async function main() {
     // A signer is required to call a 'payable' contract function
     const signer = await ethers.getSigner(userAddress)
 
-    // Verify that you own a dungeon
-    const id = 	3043;
-    const mine = await dungeons.ownerOf(id);
-    
     // Approve Dungeons tokens (just ask for single approval to save gas)
     await dungeons.connect(signer).setApprovalForAll(staker.address, true);
 
-    // Stake a dungeon
-    await staker.connect(signer).stake([id]);
-    const numStaked = await staker.getNumStaked(userAddress);
+    // Stake dungeons
+    const ids = [3043, 6];
+    let numStaked, stakedIds;
+    await staker.connect(signer).stake(ids);
+    console.log('staking')
+    numStaked = await staker.getNumStaked(userAddress);
     console.log(numStaked);
+    stakedIds = await staker.getStakedIds(userAddress);
+    console.log(stakedIds);
+
+    await staker.connect(signer).unstake(ids);
+    console.log('unstake')
+    numStaked = await staker.getNumStaked(userAddress);
+    console.log(numStaked);
+    stakedIds = await staker.getStakedIds(userAddress);
+    console.log(stakedIds);
+
+
+
 }
 
 
