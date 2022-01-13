@@ -8,10 +8,15 @@ const ethers = hre.ethers;
 const cncAddress = "0x86f7692569914B5060Ef39aAb99e62eC96A6Ed45" // Crypts and Caverns contract
 const userAddress = "0x8A5a244B08678a7DE0605494fe4E76C552935d38"    // User to impersonate (with many crypts and caverns)
 
+const epoch = 1;
+
 async function main() {
     
-    const Dungeons = await ethers.getContractFactory("Dungeons");
+    const Dungeons = await ethers.getContractFactory("contracts/dungeons.sol:Dungeons");
     const dungeons = await Dungeons.attach(cncAddress);
+
+    const Staker = await ethers.getContractFactory("DungeonsStaker")
+    const staker = await Staker.deploy(epoch, cncAddress);
 
     // Impersonate user and fund wallet
     await hre.network.provider.send("hardhat_setBalance", [
@@ -28,10 +33,15 @@ async function main() {
 
     // Verify that you own a dungeon
     const id = 	3043;
-    
-    // Stake a dungeon
     const mine = await dungeons.ownerOf(id);
-    console.log(mine);
+    
+    // Approve Dungeons tokens (just ask for single approval to save gas)
+    await dungeons.connect(signer).setApprovalForAll(staker.address, true);
+
+    // Stake a dungeon
+    await staker.connect(signer).stake([id]);
+    const numStaked = await staker.getNumStaked(userAddress);
+    console.log(numStaked);
 }
 
 

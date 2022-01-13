@@ -5,6 +5,8 @@
 ## Sub-folders
 `/contracts` - Solidity contracts as deployed on-chain
 
+`/docs` - Documentation for integrating Crypts and Caverns into your project. (WIP)
+
 `/examples` - Example code and proofs of concept for working with the project.
 
 `/website` - threepwave.com website including the Crypts and Caverns website.
