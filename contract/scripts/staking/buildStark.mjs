@@ -7,6 +7,7 @@ const network = "http://localhost:5001/";
 const provider = new Provider({baseUrl: network})
 
 // Set tokenId to 5
+console.log('set tokenId to 5');
 const setTokenResponse = await provider.addTransaction({
   type: "INVOKE_FUNCTION",
   contract_address: CONTRACT_ADDRESS,
@@ -16,13 +17,10 @@ const setTokenResponse = await provider.addTransaction({
 console.log(setTokenResponse);
 
 // Read tokenId
-console.log(CONTRACT_ADDRESS);
 const getTokenResponse = await provider.callContract({
   contract_address: CONTRACT_ADDRESS,
   entry_point_selector: getSelectorFromName("get_tokenId"),
   calldata: ["5"]
 })
 
-const tmp = getTokenResponse.result[0];
-console.log(tmp); 
-// console.log(getTokenResponse.result[0].response.data);
+console.log(`get_tokenId(): ${getTokenResponse.result[0]}`);

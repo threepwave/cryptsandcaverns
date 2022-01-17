@@ -21,7 +21,8 @@
     "stublootlocal": "npx hardhat run ./scripts/stubloot.js --network localhost",
     "node": "npx hardhat node",
     "cairocompile": "nile compile; nile deploy dungeon",
-    "cairobuild": "node ./scripts/staking/buildStark.mjs"
+    "cairobuild": "node ./scripts/staking/buildStark.mjs",
+    "caironode": "nile node --port 5001"
   },
   "repository": {
     "type": "git",
