@@ -11,7 +11,7 @@
 
 pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
+import "hardhat/console.sol";   // HACK Remove before shipping
 
 // TODO - Look into Upgradeable
 import "@openzeppelin/contracts/access/Ownable.sol";

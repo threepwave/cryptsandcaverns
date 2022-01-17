@@ -25,7 +25,7 @@ async function main() {
     ]);
     await network.provider.request({
         method: "hardhat_impersonateAccount",
-        params: [userAddress],  // 13 loot
+        params: [userAddress],  // Owns many crypts and caverns
     });
 
     // A signer is required to call a 'payable' contract function

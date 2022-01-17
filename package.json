@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "starknet": "^2.5.0"
+  }
+}

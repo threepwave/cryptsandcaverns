@@ -19,7 +19,9 @@
     "stakingwatch": "watch 'npx hardhat run ./scripts/staking/stake.js' ./contracts ./scripts",
     "stubloot": "npx hardhat run ./scripts/stubloot.js",
     "stublootlocal": "npx hardhat run ./scripts/stubloot.js --network localhost",
-    "node": "npx hardhat node"
+    "node": "npx hardhat node",
+    "cairocompile": "nile compile; nile deploy dungeon",
+    "cairobuild": "node ./scripts/staking/buildStark.mjs"
   },
   "repository": {
     "type": "git",
