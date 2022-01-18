@@ -1,2 +1,0 @@
-0x0749b005824103f3ad89fa784004c0708ed5e45d0da0777620e15e15cfbda11e:artifacts/abis/dungeon.json
-0x0145bb384d5b70cdc16689aca736e73b1bbae45c7aa5c82eb9e689f63224960a:artifacts/abis/dungeon.json

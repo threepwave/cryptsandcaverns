@@ -2,6 +2,10 @@
 artifacts
 cache
 
+# Starknet
+goerli.deployments.txt
+localhost.deployments.txt
+
 # Logs
 logs
 *.log
