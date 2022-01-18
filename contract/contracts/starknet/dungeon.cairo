@@ -2,7 +2,21 @@
 %builtins pedersen range_check
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
-from starkware.cairo.common.math import (assert_nn_le, assert_nn)
+
+#### Data Structure ####
+# token_id: [1, 9000] <- index
+# owner: address
+# environment: [0, 5]
+# size: [6, 25]
+# name: string
+
+struct Dungeon:
+    # member token_id : felt    # index which is not actually stored in the struct, just queried
+    member owner : felt
+    # member environment : felt
+    # member size : felt
+    # member name : felt
+end
 
 # owner - The token ID of the dungeon which is used as an index
 @storage_var
@@ -29,7 +43,10 @@ end
 @view
 func get_dungeon{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(token_id : felt) -> (address : felt):
+        range_check_ptr}(token_id : felt) -> (dungeon : Dungeon):
     let (address) = dungeon_owner.read(token_id)
-    return (address)
+
+    let dungeon = Dungeon(
+        address = address)
+    return (dungeon)
 end
