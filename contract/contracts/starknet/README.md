@@ -47,3 +47,6 @@ pip install ./nile
 
 5. Deploying your contract
 ```nile deploy <yourcontractname>```
+
+Optional: Add the following to your ~/.zprofile to quickly spin up your environment each time:
+```alias envsetup="python3 -m venv env; source env/bin/activate; git clone https://github.com/OpenZeppelin/nile.git; pip install ./nile; nile init"```
