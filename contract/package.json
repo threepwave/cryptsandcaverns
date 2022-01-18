@@ -20,7 +20,7 @@
     "stubloot": "npx hardhat run ./scripts/stubloot.js",
     "stublootlocal": "npx hardhat run ./scripts/stubloot.js --network localhost",
     "node": "npx hardhat node",
-    "cairocompile": "watch 'nile compile; nile deploy dungeon; node ./scripts/staking/buildStark.mjs' ./contracts",
+    "cairocompile": "watch 'nile compile; nile deploy dungeon; node ./scripts/staking/buildStark.mjs' ./contracts ./scripts",
     "cairobuild": "watch 'node ./scripts/staking/buildStark.mjs' ./scripts",
     "caironode": "nile node --port 5001"
   },
