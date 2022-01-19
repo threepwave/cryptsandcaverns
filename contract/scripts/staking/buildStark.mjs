@@ -28,11 +28,11 @@ const setTokenResponse = await provider.addTransaction({
   type: "INVOKE_FUNCTION",
   contract_address: CONTRACT_ADDRESS,
   entry_point_selector: getSelectorFromName("set_token_id"),
-  calldata: [TOKEN_ID, OWNER_ADDRESS]
+  calldata: [TOKEN_ID, OWNER_ADDRESS, ENVIRONMENT]
 });
 console.log(setTokenResponse);
 
-// Read tokenId
+// Read dungeon metadata
 const getTokenResponse = await provider.callContract({
   contract_address: CONTRACT_ADDRESS,
   entry_point_selector: getSelectorFromName("get_dungeon"),
@@ -40,6 +40,22 @@ const getTokenResponse = await provider.callContract({
 }) 
 
 console.log(`get_dungeon(): ${getTokenResponse.result}`); 
-// console.log(`get_dungeon(): ${getTokenResponse}`);  
 
- 
+
+// Read Owner
+const getOwnerResponse = await provider.callContract({
+  contract_address: CONTRACT_ADDRESS,
+  entry_point_selector: getSelectorFromName("get_owner"),
+  calldata: [TOKEN_ID]
+}) 
+
+console.log(`get_owner(): ${getOwnerResponse.result}`); 
+
+// Read Environment
+const getEnvironmentResponse = await provider.callContract({
+  contract_address: CONTRACT_ADDRESS,
+  entry_point_selector: getSelectorFromName("get_environment"),
+  calldata: [TOKEN_ID]
+}) 
+
+console.log(`get_environment(): ${getEnvironmentResponse.result}`); 

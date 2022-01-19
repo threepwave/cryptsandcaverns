@@ -11,11 +11,11 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 # name: string
 
 struct Dungeon:
-    # member token_id : felt    # index which is not actually stored in the struct, just queried
-    member owner : felt
-    # member environment : felt
-    # member size : felt
-    # member name : felt
+    # member token_id : felt    # [1, 9000] <- index which is not actually stored in the struct, just queried
+    member owner : felt         # address of owner
+    member environment : felt   # [0, 5]
+    # member size : felt          # [6, 25]
+    # member name : felt          # string
 end
 
 # owner - The token ID of the dungeon which is used as an index
@@ -31,10 +31,11 @@ end
 @external
 func set_token_id{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(token_id : felt, address : felt):
+        range_check_ptr}(token_id : felt, address : felt, environment : felt):
 
     # Set the owner of this dungeon
     dungeon_owner.write(token_id, address)
+    dungeon_environment.write(token_id, environment)
     
     return ()
 end
@@ -44,9 +45,31 @@ end
 func get_dungeon{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(token_id : felt) -> (dungeon : Dungeon):
+   
     let (address) = dungeon_owner.read(token_id)
+    let (environment) = dungeon_environment.read(token_id)
 
     let dungeon = Dungeon(
-        address = address)
+        owner = address,
+        environment = environment)
     return (dungeon)
+end
+
+## Individual variable getters ##
+# Get: Reads the owner of a dungeon by tokenId
+@view
+func get_owner{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(token_id : felt) -> (address : felt):
+    let (address) = dungeon_owner.read(token_id)
+    return (address)
+end
+
+# Get: Reads the environment of a dungeon by tokenId
+@view
+func get_environment{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(token_id : felt) -> (environment : felt):
+    let (environment) = dungeon_environment.read(token_id)
+    return (environment)
 end
