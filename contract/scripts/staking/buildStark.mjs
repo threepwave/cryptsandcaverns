@@ -1,4 +1,4 @@
-import { Provider, stark } from 'starknet';
+import { Provider, stark, shortString } from 'starknet';
 const { getSelectorFromName } = stark;
 import { readFileSync} from 'fs';
 
@@ -19,8 +19,9 @@ const provider = new Provider({baseUrl: network})
 
 const TOKEN_ID = "5";
 const OWNER_ADDRESS = BigInt("0x062cdb5f547735b352813397a5d2621c950cd98c6ac606d6d8898b11d7bd7e96").toString(10);
-// const OWNER_ADDRESS = BigInt("0x062cdb5f547735b352813397a5d2621c9").toString(10);
 const ENVIRONMENT = "3";
+const SIZE = "20"
+const NAME = BigInt(shortString.encodeShortString("Gremp's Dunes")).toString(10);
 
 // Set tokenId for #5
 console.log('set address for #5')
@@ -28,10 +29,10 @@ const setTokenResponse = await provider.addTransaction({
   type: "INVOKE_FUNCTION",
   contract_address: CONTRACT_ADDRESS,
   entry_point_selector: getSelectorFromName("set_token_id"),
-  calldata: [TOKEN_ID, OWNER_ADDRESS, ENVIRONMENT]
+  calldata: [TOKEN_ID, OWNER_ADDRESS, ENVIRONMENT, SIZE, NAME]
 });
 console.log(setTokenResponse);
-
+/*
 // Read dungeon metadata
 const getTokenResponse = await provider.callContract({
   contract_address: CONTRACT_ADDRESS,
@@ -59,3 +60,20 @@ const getEnvironmentResponse = await provider.callContract({
 }) 
 
 console.log(`get_environment(): ${getEnvironmentResponse.result}`); 
+
+// Read Size
+const getSizeResponse = await provider.callContract({
+  contract_address: CONTRACT_ADDRESS,
+  entry_point_selector: getSelectorFromName("get_size"),
+  calldata: [TOKEN_ID]
+}) 
+
+console.log(`get_size(): ${getSizeResponse.result}`); 
+*/
+// Read Name
+const getNameResponse = await provider.callContract({
+  contract_address: CONTRACT_ADDRESS,
+  entry_point_selector: getSelectorFromName("get_name"),
+  calldata: [TOKEN_ID]
+}) 
+console.log(shortString.decodeShortString(getNameResponse.result[0]))
