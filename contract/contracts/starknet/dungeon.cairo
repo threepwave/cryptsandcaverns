@@ -1,3 +1,7 @@
+# Crypts and Caverns - 9000 on-chain generative dungeons.
+# Learn more: https://threepwave.com/cryptsandcaverns
+# dungeon.cairo - main contract containing dungeon metadata
+
 %lang starknet
 %builtins pedersen range_check
 
@@ -7,7 +11,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 # token_id: [1, 9000] <- index
 # owner: address
 # environment: [0, 5]
-# size: [6, 25]
+# size: [6, 25]z
 # name: string
 
 struct Dungeon:
@@ -38,7 +42,7 @@ end
 
 # Set: Populates a dungeon owner's address by tokenId
 @external
-func set_token_id{
+func set_dungeon{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(token_id : felt, address : felt, environment : felt, size : felt, name : felt):
 

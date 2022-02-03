@@ -11,7 +11,14 @@ const getContractAddress = () => {
   return(address)
 }
 
-getContractAddress();
+const parseResponse = (response) => {
+  // console.log(`Raw: ${response}`)
+  console.log('Raw: ');
+  console.log(response);
+  // console.log(`Name: ${shortString.decodeShortString(response.result[4])}`)
+}
+
+// getContractAddress();
 const CONTRACT_ADDRESS = getContractAddress() // Grab contract address from deployments.txt so we don't have to copy/pasta every time
 const network = "http://localhost:5001/";
 
@@ -28,10 +35,11 @@ console.log('set address for #5')
 const setTokenResponse = await provider.addTransaction({
   type: "INVOKE_FUNCTION",
   contract_address: CONTRACT_ADDRESS,
-  entry_point_selector: getSelectorFromName("set_token_id"),
+  entry_point_selector: getSelectorFromName("set_dungeon"),
   calldata: [TOKEN_ID, OWNER_ADDRESS, ENVIRONMENT, SIZE, NAME]
 });
-console.log(setTokenResponse);
+
+console.log(parseResponse(setTokenResponse))
 /*
 // Read dungeon metadata
 const getTokenResponse = await provider.callContract({
@@ -69,7 +77,7 @@ const getSizeResponse = await provider.callContract({
 }) 
 
 console.log(`get_size(): ${getSizeResponse.result}`); 
-*/
+
 // Read Name
 const getNameResponse = await provider.callContract({
   contract_address: CONTRACT_ADDRESS,
@@ -77,3 +85,4 @@ const getNameResponse = await provider.callContract({
   calldata: [TOKEN_ID]
 }) 
 console.log(shortString.decodeShortString(getNameResponse.result[0]))
+*/
