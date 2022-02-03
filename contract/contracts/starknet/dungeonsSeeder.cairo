@@ -14,6 +14,16 @@ from lib.swap_endianness import swap_endianness_64
 const TOP = 0xffffffffffffffff0000000000000000
 const BOTTOM = 0xffffffffffffffff
 
+# the following get_FOO functions are just simple indexes to a static
+# array; the array is defined using the `dw` instruction and accessed
+# via a label, which is a runtime address of the label in memory
+# the strings are Cairo's string-literals which can be up to 31 chars
+# but cannot contain the ' symbol (Cairo 0.7); those strings that do
+# are "pre-encoded" into a felt
+#
+# references:
+# https://www.cairo-lang.org/docs/how_cairo_works/define_word.html
+# https://www.cairo-lang.org/docs/how_cairo_works/consts.html#short-string-literals
 func get_prefix(idx : felt) -> (prefix : felt):
     let (l) = get_label_location(prefixes)
     let arr = cast(l, felt*)
@@ -251,6 +261,28 @@ func get_people(idx : felt) -> (people : felt):
     dw 375531054963
 end
 
+# returns a size for the dungeon that determines the layout. Size can be between 8x8 -> 25x25 and dungeons are always square.
+@view
+func get_size{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(seed : Uint256) -> (size : felt):
+    return random_seed_shift_min_max(seed, 4, 8, 25)
+end
+
+namespace Environment:
+    const StoneTemple = 0
+    const MountainDeep = 1
+    const DesertOasis = 2
+    const ForestRuins = 3
+    const UnderwaterKeep = 4
+    const EmbersGlow = 5
+end
+
+# returns a random environment that sets the tone/mood for a dungeon:
+# 0 - Stone Temple (30%)
+# 1 - Mountain Deep (25%)
+# 2 - Desert Oasis (20%)
+# 3 - Forest Ruins (12%)
+# 4 - Underwater Keep (7%)
+# 5 - Ember's Glow (5%)
 @view
 func get_environment{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(seed : Uint256) -> (
         environment : felt):
@@ -263,38 +295,50 @@ func get_environment{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(seed : Uint
     # rand is bound to 100, we can only use "low"
     let (stone_temple) = is_in_range(rand.low, 70, 100)
     if stone_temple == 1:
-        return (0)
+        return (Environment.StoneTemple)
     end
 
     let (mountain_deep) = is_in_range(rand.low, 45, 70)
     if mountain_deep == 1:
-        return (1)
+        return (Environment.MountainDeep)
     end
 
     let (desert_oasis) = is_in_range(rand.low, 25, 45)
     if desert_oasis == 1:
-        return (2)
+        return (Environment.DesertOasis)
     end
 
     let (forest_ruins) = is_in_range(rand.low, 13, 25)
     if forest_ruins == 1:
-        return (3)
+        return (Environment.ForestRuins)
     end
 
     let (underwater_keep) = is_in_range(rand.low, 4, 13)
     if underwater_keep == 1:
-        return (4)
+        return (Environment.UnderwaterKeep)
     end
 
-    return (5)  # ember's glow
+    return (Environment.EmbersGlow)
 end
 
+# generates a random name for a dungeon
+# the return value is a 3-tuple of:
+# 1) flag if the dungeon is unique / legendary
+# 2) dungeon affinity as a felt encoded string literal
+# 3) an array of felt encoded string literals, the actual name of the dungeon
 @view
 func get_name{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(seed : Uint256) -> (
         legendary : felt, affinity : felt, out_len : felt, out : felt*):
     alloc_locals
     let (unique_seed) = random_seed_shift_min_max(seed, 15, 0, 10000)
     let (base_seed) = random_seed_shift_min_max(seed, 16, 0, 38)
+
+    # in the following code, every if block returns the tuple
+    # based on the seed pseudorandomness;
+    # most of the logic in each branch is just getting the
+    # appropriate values from the "static arrays" and building
+    # the resulting output array `r`; its length is hardcoded
+    # as are the `legendary` and `affinity` values
 
     let (is_unique) = is_le(unique_seed, 16)
     if is_unique == 1:
@@ -368,6 +412,8 @@ func get_name{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(seed : Uint256) ->
     end
 end
 
+# helper function that takes a seed, does a logical left shift and
+# constraints the random values to a min-max range
 func random_seed_shift_min_max{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(
         seed : Uint256, shift : felt, min : felt, max : felt) -> (low : felt):
     let (shifted_seed) = uint256_shl(seed, Uint256(low=shift, high=0))
@@ -377,13 +423,19 @@ func random_seed_shift_min_max{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(
     return (rnd.low)
 end
 
+# translation of Solidity's `uint256(keccak256(abi.encodePacked(input)))` into Cairo
+# i.e. takes a Uint256, runs Solidity keccak256 on it and turns the output of the
+# hash function back into a Uint256
 func hash_uint256{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(input : Uint256) -> (
         out : Uint256):
     alloc_locals
 
-    # TODO: use temps?
     # TODO: test
-    # TODO: document why / how it works
+
+    # the input array for keccak256 has to be data split into 64 bit words
+    # so here we build the those parts from two 128 bit words that make up
+    # the Uint256 input; it's just some bit shifting using the stdlib
+
     let (t0) = bitwise_and(input.high, TOP)
     let (w0, _) = unsigned_div_rem(t0, BOTTOM)
     let (w1) = bitwise_and(input.high, BOTTOM)
@@ -392,14 +444,20 @@ func hash_uint256{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(input : Uint25
     let (w2, _) = unsigned_div_rem(t2, BOTTOM)
     let (w3) = bitwise_and(input.low, BOTTOM)
 
-    let word : felt* = alloc()
-    assert word[0] = w0
-    assert word[1] = w1
-    assert word[2] = w2
-    assert word[3] = w3
+    let hash_data : felt* = alloc()
+    assert hash_data[0] = w0
+    assert hash_data[1] = w1
+    assert hash_data[2] = w2
+    assert hash_data[3] = w3
 
     let (keccak_ptr : felt*) = alloc()
-    let (hash) = keccak256{keccak_ptr=keccak_ptr}(word, 32)
+    # four 64-bit words == 256 bits == 32 bytes
+    let (hash) = keccak256{keccak_ptr=keccak_ptr}(hash_data, 32)
+
+    # the output of keccak256 is an array of four 64 bit words in
+    # little endian; to convert this to the return type fo Uint256
+    # we first need to swap the endianness of each word and then
+    # build the low 128 bit and high 128 bit parts of Uint256
 
     let (p0) = swap_endianness_64(hash[0], 8)
     let (p1) = swap_endianness_64(hash[1], 8)
@@ -415,6 +473,7 @@ func hash_uint256{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(input : Uint25
     return (rnd)
 end
 
+# translation of `random` in dungeonsSeeder.sol to Cairo
 @view
 func random{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(
         input : Uint256, min : Uint256, max : Uint256) -> (out : Uint256):
