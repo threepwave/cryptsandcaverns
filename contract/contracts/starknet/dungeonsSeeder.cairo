@@ -35,7 +35,6 @@ func get_prefix(idx : felt) -> (prefix : felt):
     dw 'Bleak'
     dw 'Bright'
     dw 'Burning'
-    dw 'Burning'
     dw 'Collapsed'
     dw 'Corrupted'
     dw 'Dark'
@@ -64,7 +63,7 @@ func get_prefix(idx : felt) -> (prefix : felt):
     # the felt encoded string literal of "Siren's"
     dw 23478363115890547
     dw 'Sunken'
-    dw 'Whisperin'
+    dw 'Whispering'
 end
 
 func get_land(idx : felt) -> (land : felt):
@@ -290,30 +289,29 @@ func get_environment{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(seed : Uint
 
     let min = Uint256(low=0, high=0)
     let max = Uint256(low=100, high=0)
-    let (rand) = random(seed, min, max)
+    let (rand) = random_seed_shift_min_max(seed, 8, 0, 100)
 
-    # rand is bound to 100, we can only use "low"
-    let (stone_temple) = is_in_range(rand.low, 70, 100)
+    let (stone_temple) = is_in_range(rand, 70, 100)
     if stone_temple == 1:
         return (Environment.StoneTemple)
     end
 
-    let (mountain_deep) = is_in_range(rand.low, 45, 70)
+    let (mountain_deep) = is_in_range(rand, 45, 70)
     if mountain_deep == 1:
         return (Environment.MountainDeep)
     end
 
-    let (desert_oasis) = is_in_range(rand.low, 25, 45)
+    let (desert_oasis) = is_in_range(rand, 25, 45)
     if desert_oasis == 1:
         return (Environment.DesertOasis)
     end
 
-    let (forest_ruins) = is_in_range(rand.low, 13, 25)
+    let (forest_ruins) = is_in_range(rand, 13, 25)
     if forest_ruins == 1:
         return (Environment.ForestRuins)
     end
 
-    let (underwater_keep) = is_in_range(rand.low, 4, 13)
+    let (underwater_keep) = is_in_range(rand, 4, 13)
     if underwater_keep == 1:
         return (Environment.UnderwaterKeep)
     end
@@ -364,8 +362,8 @@ func get_name{range_check_ptr, bitwise_ptr : BitwiseBuiltin*}(seed : Uint256) ->
 
     let (prefix_baseland_suffix) = is_le(unique_seed, 1800)
     if prefix_baseland_suffix == 1:
-        let (people_idx) = random_seed_shift_min_max(seed, 42, 0, 29)
-        let (p) = get_people(people_idx)
+        let (prefix_idx) = random_seed_shift_min_max(seed, 42, 0, 29)
+        let (p) = get_prefix(prefix_idx)
         let (l) = get_land(base_seed)
         let (aff_idx) = random_seed_shift_min_max(seed, 27, 0, 59)
         let (a) = get_suffix(aff_idx)
