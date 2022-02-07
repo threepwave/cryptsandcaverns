@@ -1,10 +1,11 @@
 require('@nomiclabs/hardhat-waffle');
 require('@symblox/hardhat-abi-gen');  // Generate ABI config from contract
 require("@nomiclabs/hardhat-etherscan");
+require("@shardlabs/starknet-hardhat-plugin");
 
 // Uncomment to deploy
-// require('hardhat-deploy');  
-// require('hardhat-deploy-ethers');  
+// require('hardhat-deploy');
+// require('hardhat-deploy-ethers');
 
 module.exports = {
   solidity: {
@@ -26,8 +27,8 @@ module.exports = {
         blockNumber: 13649106 // Pin to a recent block to go faster
       },
       // accounts: [{
-        // privateKey: process.env.WALLET_PRIVATE_KEY,
-        // balance: '0'}],
+      // privateKey: process.env.WALLET_PRIVATE_KEY,
+      // balance: '0'}],
     },
     mainnet: {
       url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.alchemy_key}`,
@@ -38,6 +39,15 @@ module.exports = {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.alchemy_key}`,
       // accounts: [process.env.WALLET_PRIVATE_KEY],
     },
+    starknetLocal: {
+      url: "http://127.0.0.1:5000"
+    }
+  },
+  cairo: {
+    venv: "active",
+  },
+  mocha: {
+    starknetNetwork: "starknetLocal"
   },
   etherscan: {
     apiKey: process.env.etherscan_key,
