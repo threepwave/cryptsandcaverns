@@ -9,7 +9,6 @@
     "build100": "npx hardhat run scripts/100.js",
     "build100watch": "watch 'npm run 100' ./contracts ./scripts",
     "build100local": "npx hardhat run scripts/100.js --network localhost",
-    "buildstarknet": "npx hardhat starknet-compile ./contracts/starknet --cairo-path ./contracts/starknet",
     "render": "npx hardhat compile; npx hardhat run scripts/render.js",
     "renderwatch": "watch 'npm run render' ./contracts ./scripts",
     "renderlocal": "npx hardhat compile; npx hardhat run scripts/render.js --network localhost",
@@ -18,7 +17,10 @@
     "gas": "npx hardhat compile; npx hardhat run scripts/gas.js --network localhost",
     "stubloot": "npx hardhat run ./scripts/stubloot.js",
     "stublootlocal": "npx hardhat run ./scripts/stubloot.js --network localhost",
-    "node": "npx hardhat node"
+    "node": "npx hardhat node",
+    "buildstarknet": "npx hardhat starknet-compile ./contracts/starknet --cairo-path ./contracts/starknet",
+    "teststarknet": "npx hardhat test",
+    "nodestarknet": "starknet-devnet"
   },
   "repository": {
     "type": "git",

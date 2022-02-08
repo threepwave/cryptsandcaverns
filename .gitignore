@@ -2,6 +2,8 @@
 env/
 nile/
 *.deployments.txt
+accounts.json
+contract/tests
 
 
 # Hardhat
