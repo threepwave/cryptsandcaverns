@@ -1,3 +1,4 @@
+# dungeonsSeeder.cairo - Generates random attributes from a seed (sent from L1)
 %lang starknet
 
 from starkware.cairo.common.alloc import alloc

@@ -131,8 +131,8 @@ Add the following to your `settings.json` (cmd+shift+p->settings (json)) file:
 2. put your etherscan api key into hardhat.config.js
 2. Run command: `npx hardhat verify --network <blah> <contract> <arguments (optional)>`
 
-## Contract info
-# Rinkeby
+# Contract info
+## Rinkeby
 Fake Loot Rinkeby Address: 0xFF9C1b15B16263C61d017ee9F65C50e4AE0113D7
 
 Render Address: 0x05b0eE327FcEe826021E91A239FE619CF946E558
@@ -140,10 +140,35 @@ Generator Address: 0xA0f363E26ca2ed2cBFD33F0Bc03766c5691eC86C
 Seeder Address: 0x2F613ac4E88dcCD9f7b0fC9df7F23a0D25D8eF32
 Dungeons Address: 0xFe6C93C510d9777245C45720cE4f42EA98e7b351
 
-# Mainet
+## Mainet
 Loot Address: 0xFF9C1b15B16263C61d017ee9F65C50e4AE0113D7
 
 Render Address: 0xf701F9cd49216FA6111Ba4c8d41227178592E9B4
 Generator Address: 0x7c33284fe491A1212A99C0eDC499E282920a265c
 Seeder Address: 0xD2806cCE4be35ae7B84a25D11B5c2F1a6deeEdcB
 Dungeons Address: 0x86f7692569914B5060Ef39aAb99e62eC96A6Ed45
+
+# Starknet / Cairo
+
+Starknet is a Layer 2 that uses zkRollup technology to offer a low-gas, fast-transaction rollup built on top of ethereum. Transactions are batched and submitted to L1 over time.
+
+Starknet uses the language 'Cairo' which is similar to Solidity but has its own quirks.
+
+Starknet contracts end in `.cairo` and are housed in the `./contracts/starknet` folder.
+
+## Installation
+1. Install hardhat and dependencies: `npm install`
+2. Install [starknet-devnet](https://github.com/Shard-Labs/starknet-devnet) local node: `pip install starknet-devnet`
+
+## Build / Compile
+We use [`hardhat-starknet`](https://github.com/Shard-Labs/starknet-hardhat-plugin) to build and compile our Cairo contracts. 
+1. Run `npm run nodestarknet` in a terminal to start a local node. This will listen for queries.
+2. Run `npm run buildstarknet` in another terminal to compile and run cairo contracts.
+
+## Deploy 
+??? *(Fill in when we get here)*
+
+## Test
+1. Run `npm run nodestarknet` in a terminal to start a local node. This will listen for queries.
+2. Run `npm run teststarknet` in another terminal to compile and run tests.
+
