@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "Sample code and prototypes to make it easier to build on top of onchain maps.",
   "scripts": {
-    "ascii": "npx hardhat compile; npx hardhat run asciiart/asciiart.js"
+    "ascii": "npx hardhat compile; npx hardhat run asciiart/asciiart.js",
+    "get-images": "npx hardhat compile; npx hardhat run get-images/get-images.js"
   },
   "repository": {
     "type": "git",
@@ -12,7 +13,8 @@
   "author": "threepwave",
   "license": "CC-0",
   "dependencies": {
-    "ethereum-waffle": "^3.4.0"
+    "ethereum-waffle": "^3.4.0",
+    "sharp": "^0.30.1"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
