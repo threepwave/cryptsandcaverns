@@ -14,19 +14,25 @@ async function main() {
 
     // Start and end token ID's
     const id = {
-      start: 7777,
-      end: 7800
+      start: 1,
+      end: 100  // Change this if you want more images
     }
+
     const folder = './get-images/cache'
 
     for(let i = id.start; i <= id.end; i++) {
       try {
-        const svg = await dungeons.getSvg(i);
-        fs.writeFileSync(`${folder}/${i}.svg`, svg);
-        const png = await sharp(Buffer.from(svg)).resize(1000).png().toBuffer().then((data) => {
-          return(data)
-        })
-        fs.writeFileSync(`${folder}/${i}.png`, png);
+        let filename = `${folder}/${i}`
+        if(!fs.existsSync(`${filename}.png`)) {
+          const svg = await dungeons.getSvg(i);
+          fs.writeFileSync(`${filename}.svg`, svg);
+          const png = await sharp(Buffer.from(svg)).resize(1000).png().toBuffer().then((data) => {
+            return(data)
+          })
+          fs.writeFileSync(`${filename}.png`, png);
+        } else {
+          console.log(`Skipping ${i}`)
+        }
       } catch(err) {
         console.log(`Failed to render: ${i}`)
         // console.log(err);
