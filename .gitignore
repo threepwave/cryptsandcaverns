@@ -1,3 +1,5 @@
+.DS_Store # OSX crap
+
 # Hardhat
 artifacts
 cache
