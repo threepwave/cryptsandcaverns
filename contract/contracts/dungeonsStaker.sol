@@ -34,13 +34,8 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
     Dungeons dungeons; // Reference to our original Crypts and Caverns contract 
 
     // TODO - Check write gas for uint16 array, map of strct w/ uint256 vs. this map
-    mapping(uint256 => uint256) epochStaked;
+    mapping(uint256 => uint256) blockStaked;
     mapping(uint256 => address) ownership;
-
-    // optimization idea - store numstaked per address vs full map of tokens
-
-    uint256 genesis;
-    uint256 epoch;
 
     /** 
     * @notice Stakes a dungeon in the contract so rewards can be earned 
@@ -56,7 +51,7 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
             ownership[tokenIds[i]] = msg.sender;
 
             // Set epoch date for this sender so we know how long they've staked for
-            epochStaked[tokenIds[i]] = _epochNum(); 
+            blockStaked[tokenIds[i]] = block.number; 
 
             // Transfer Dungeon to staking contract
             dungeons.transferFrom(  // We can use transferFrom to save gas because we know our contract is IERC721Receivable
@@ -83,7 +78,7 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
             ownership[tokenIds[i]] = address(0);
 
             // Reset epoch to zero for this token (unstaked)
-            epochStaked[tokenIds[i]] = 0;
+            blockStaked[tokenIds[i]] = 0;
 
             // Transfer dungeon from staking contract back to user
             dungeons.safeTransferFrom(  // We use safeTransferFrom here to make sure the user's wallet is ERC721 compatible
@@ -134,6 +129,7 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
         return dungeonIds;
     }
     
+    // TODO: Move to Realms project sub-contract
     /**
      * @notice Check the current epoch for calculating how long a dungeon has been staked
      */
@@ -142,8 +138,8 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
     }
 
     constructor(uint256 _epoch, address _dungeonsAddress) {
-        genesis = block.timestamp;
-        epoch = _epoch;
+        genesis = block.timestamp;  // TODO - Move to Realms project sub-contract
+        epoch = _epoch;             // TODO - Move to Realms project sub-contract
         dungeons = Dungeons(_dungeonsAddress);
     }
 }
