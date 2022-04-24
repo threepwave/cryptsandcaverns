@@ -19,19 +19,9 @@ interface DungeonsStaker {
     function blockStaked(uint256 tokenId) external returns (uint256); // TODO: add interface for staking contract (to get stake time)
 }
 
-contract DungeonsStakerProjects is Ownable, ReentrancyGuard {
+contract DungeonsStakerHelper is Ownable, ReentrancyGuard {
 
     DungeonsStaker dungeonsStaker;  // Reference to staking contract
-    address[] projects;             // Array containing each project's address
-
-    function addProject(address _project) public payable onlyOwner {
-
-    }
-
-    function updateProjects(address[] memory _projects) public payable onlyOwner {
-
-        
-    }
 
     // function editProject()
     constructor(address _dungeonsStaker) {

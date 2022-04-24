@@ -25,6 +25,11 @@ interface Dungeons {
     function safeTransferFrom(address from, address to, uint256 tokenId) external;
 }
 
+interface DungeonsStakerHelper {
+    function stake(uint256[] memory tokenIds, address staker) external; // Allows us to add new staking functionality via upgraded contract (without requiring people to unstake)
+    function unstake(uint256[] memory tokenIds, address staker) external; // Allows us to add new staking functionality via upgraded contract (without requiring people to unstake)
+}
+
 contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
 
     /* Broadcast events for subgraph graph and analytics) */
@@ -32,10 +37,11 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
     event Unstake(uint256[] tokenIds, address player);
 
     Dungeons dungeons; // Reference to our original Crypts and Caverns contract 
+    DungeonsStakerHelper helper;    // Helper contract we can upgrade
 
     // TODO - Check write gas for uint16 array, map of strct w/ uint256 vs. this map
-    mapping(uint256 => uint256) blockStaked;
-    mapping(uint256 => address) ownership;
+    mapping(uint256 => uint256) public blockStaked;
+    mapping(uint256 => address) public ownership;
 
     /** 
     * @notice Stakes a dungeon in the contract so rewards can be earned 
@@ -50,8 +56,10 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
             // Set ownership of token to staker
             ownership[tokenIds[i]] = msg.sender;
 
-            // Set epoch date for this sender so we know how long they've staked for
+            // Set block number for this sender so we know how long they've staked for
             blockStaked[tokenIds[i]] = block.number; 
+
+            
 
             // Transfer Dungeon to staking contract
             dungeons.transferFrom(  // We can use transferFrom to save gas because we know our contract is IERC721Receivable
@@ -59,6 +67,10 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
                 address(this),
                 tokenIds[i]
             );
+        }
+
+        if(address(helper) != address(0)) {
+            helper.stake(tokenIds, msg.sender);
         }
         
         emit Stake(tokenIds, msg.sender);
@@ -86,6 +98,10 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
                 msg.sender,
                 tokenIds[i]
             );
+        }
+
+        if(address(helper) != address(0)) {
+            helper.unstake(tokenIds, msg.sender);
         }
         
         emit Unstake(tokenIds, msg.sender);
@@ -136,6 +152,8 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
     // function _epochNum() internal view returns (uint256) {
         // return (block.timestamp - genesis) / (epoch * 3600);
     // }
+
+    // function updateHelper(address _helper) 
 
     constructor(uint256 _epoch, address _dungeonsAddress) {
         // genesis = block.timestamp;  // TODO - Move to Realms project sub-contract
