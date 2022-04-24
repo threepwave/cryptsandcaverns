@@ -133,13 +133,13 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
     /**
      * @notice Check the current epoch for calculating how long a dungeon has been staked
      */
-    function _epochNum() internal view returns (uint256) {
-        return (block.timestamp - genesis) / (epoch * 3600);
-    }
+    // function _epochNum() internal view returns (uint256) {
+        // return (block.timestamp - genesis) / (epoch * 3600);
+    // }
 
     constructor(uint256 _epoch, address _dungeonsAddress) {
-        genesis = block.timestamp;  // TODO - Move to Realms project sub-contract
-        epoch = _epoch;             // TODO - Move to Realms project sub-contract
+        // genesis = block.timestamp;  // TODO - Move to Realms project sub-contract
+        // epoch = _epoch;             // TODO - Move to Realms project sub-contract
         dungeons = Dungeons(_dungeonsAddress);
     }
 }

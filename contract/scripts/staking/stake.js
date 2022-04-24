@@ -15,8 +15,12 @@ async function main() {
     const Dungeons = await ethers.getContractFactory("contracts/dungeons.sol:Dungeons");
     const dungeons = await Dungeons.attach(cncAddress);
 
-    const Staker = await ethers.getContractFactory("DungeonsStaker")
+    const Staker = await ethers.getContractFactory("contracts/dungeonsStaker.sol:DungeonsStaker")
     const staker = await Staker.deploy(epoch, cncAddress);
+
+    const StakerProjects = await ethers.getContractFactory("DungeonsStakerProjects")
+    const stakerprojects = await StakerProjects.deploy(staker.address);
+
 
     // Impersonate user and fund wallet
     await hre.network.provider.send("hardhat_setBalance", [
