@@ -44,7 +44,7 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
     */
     function stake(uint256[] memory tokenIds) external whenNotPaused nonReentrant {
         for(uint256 i = 0; i < tokenIds.length; i++) {
-            // Verify that user owns this dungeon
+            require(blockStaked[tokenIds[i]] == 0, "This Dungeon is already staked");
             require(dungeons.ownerOf(tokenIds[i]) == msg.sender, "You do not own this Dungeon");
 
             // Set ownership of token to staker
@@ -71,7 +71,7 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
     */
     function unstake(uint256[] memory tokenIds) external whenNotPaused nonReentrant {
         for(uint256 i = 0; i < tokenIds.length; i++) {
-            // Verify that user originally staked this dungeon
+            require(blockStaked[tokenIds[i]] > 0, "This Dungeon is not staked");
             require(ownership[tokenIds[i]] == msg.sender, "You do not own this Dungeon");
 
             // Set ownership of token to null (unstaked)

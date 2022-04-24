@@ -44,14 +44,19 @@ async function main() {
     await staker.connect(signer).stake(ids);
     console.log('staking')
     numStaked = await staker.getNumStaked(userAddress);
-    console.log(numStaked);
+    console.log(`Num staked: ${parseInt(numStaked)}`);
     stakedIds = await staker.getStakedIds(userAddress);
-    console.log(stakedIds);
+    let tmp = [];
+    for(let i = 0; i < stakedIds.length; i++) {
+      tmp.push(parseInt(stakedIds[i]));
+      // console.log(parseInt(stakedIds[i]))
+    }
+    console.log(tmp);
 
     await staker.connect(signer).unstake(ids);
     console.log('unstake')
     numStaked = await staker.getNumStaked(userAddress);
-    console.log(numStaked);
+    console.log(`Num unstaked: ${numStaked}`);
     stakedIds = await staker.getStakedIds(userAddress);
     console.log(stakedIds);
 
