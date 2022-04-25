@@ -79,6 +79,7 @@ async function main() {
     await bridge.connect(signer).depositToL2(13241414, [3043, 6]);
 
     // Bridge back to mainnet
+    await bridge.connect(signer).withdrawFromL2([3043, 6]);
 
     await staker.connect(signer).unstake(ids);
     console.log('unstake')
