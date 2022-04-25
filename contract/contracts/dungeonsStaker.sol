@@ -37,11 +37,12 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
     event Unstake(uint256[] tokenIds, address player);
 
     Dungeons dungeons; // Reference to our original Crypts and Caverns contract 
-    DungeonsStakerHelper helper;    // Helper contract we can upgrade
+    address bridgeContract;  // Bridge contract which will call lock/unlock
 
     // TODO - Check write gas for uint16 array, map of strct w/ uint256 vs. this map
-    mapping(uint256 => uint256) public blockStaked;
-    mapping(uint256 => address) public ownership;
+    mapping(uint256 => uint256) public blockStaked; // What block number was this dungeon staked at? (default 0 = not staked)
+    mapping(uint256 => address) public ownership;   // Who is the owner of the dungeon and will receive it upon unstake? (default 0 = not staked)
+    mapping(uint256 => uint256) public locked;      // Has this dungeon been bridged to L2? (must be unlocked before unstaking)
 
     /** 
     * @notice Stakes a dungeon in the contract so rewards can be earned 
@@ -59,18 +60,12 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
             // Set block number for this sender so we know how long they've staked for
             blockStaked[tokenIds[i]] = block.number; 
 
-            
-
             // Transfer Dungeon to staking contract
             dungeons.transferFrom(  // We can use transferFrom to save gas because we know our contract is IERC721Receivable
                 msg.sender,
                 address(this),
                 tokenIds[i]
             );
-        }
-
-        if(address(helper) != address(0)) {
-            helper.stake(tokenIds, msg.sender);
         }
         
         emit Stake(tokenIds, msg.sender);
@@ -85,6 +80,7 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
         for(uint256 i = 0; i < tokenIds.length; i++) {
             require(blockStaked[tokenIds[i]] > 0, "This Dungeon is not staked");
             require(ownership[tokenIds[i]] == msg.sender, "You do not own this Dungeon");
+            require(locked[tokenIds[i]] == 0, "This Dungeon is locked (likely bridged). Please unlock before unstaking.");
 
             // Set ownership of token to null (unstaked)
             ownership[tokenIds[i]] = address(0);
@@ -99,14 +95,36 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
                 tokenIds[i]
             );
         }
-
-        if(address(helper) != address(0)) {
-            helper.unstake(tokenIds, msg.sender);
-        }
         
         emit Unstake(tokenIds, msg.sender);
     }
     
+
+    /** 
+    * @notice Lock token(s) to prevent them from being unstaked (e.g. when we bridge to another chain to prevent race conditions)
+    * @dev Requires staked tokens
+    * @param tokenIds an array of tokenIds
+    */
+    function lock(uint256[] memory tokenIds) public returns (uint256) {
+        require(bridgeContract != address(0), 'Please update the bridge contract before locking');
+        require(msg.sender == bridgeContract, 'Only the bridge contract can call this function');
+        for(uint256 i = 0; i < tokenIds.length; i++) {
+            locked[tokenIds[i]] = 1;
+        }
+    }
+
+    /** 
+    * @notice Unlocks token(s) to allow them to be unstaked (e.g. when we bridge back from another chain)
+    * @dev Requires staked and locked tokens
+    * @param tokenIds an array of tokenIds
+    */
+    function unlock(uint256[] memory tokenIds) public returns (uint256) {
+        require(bridgeContract != address(0), 'Please update the bridge contract before locking');
+        require(msg.sender == bridgeContract, 'Only the bridge contract can call this function');
+        for(uint256 i = 0; i < tokenIds.length; i++) {
+            locked[tokenIds[i]] = 0;
+        }
+    }
 
     /** 
     * @notice Check how many dungeons are currently staked by this user
@@ -144,20 +162,17 @@ contract DungeonsStaker is ERC721Holder, Ownable, ReentrancyGuard, Pausable {
 
         return dungeonIds;
     }
-    
-    // TODO: Move to Realms project sub-contract
-    /**
-     * @notice Check the current epoch for calculating how long a dungeon has been staked
-     */
-    // function _epochNum() internal view returns (uint256) {
-        // return (block.timestamp - genesis) / (epoch * 3600);
-    // }
 
-    // function updateHelper(address _helper) 
+    /** 
+    * @notice Updates the bridge contract address (e.g. in case of upgrade)
+    * @param _contract an address containing bridging logic
+    */
+    function updateBridgeContract(address _contract) public onlyOwner {
+        require(_contract != address(0), 'Please enter a valid address');
+        bridgeContract = _contract;
+    }
 
-    constructor(uint256 _epoch, address _dungeonsAddress) {
-        // genesis = block.timestamp;  // TODO - Move to Realms project sub-contract
-        // epoch = _epoch;             // TODO - Move to Realms project sub-contract
+    constructor(address _dungeonsAddress) {
         dungeons = Dungeons(_dungeonsAddress);
     }
 }

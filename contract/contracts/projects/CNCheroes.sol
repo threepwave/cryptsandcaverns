@@ -46,6 +46,8 @@ contract CNCHeroes is Ownable, ReentrancyGuard {
             require(dungeonsStaker.blockStaked(tokenIds[i]) != 0, "This dungeon is not staked");
             require(dungeonsStaker.ownership(tokenIds[i]) != address(0), "You don't own this dungeon");
             
+            // TODO - Add check if your staking date is newer than your last reward date - we should use staking date (to prevent people from unstaking / restaking and claiming?)
+
             // Check when user last claimed rewards. If they haven't, default to date staked.
             uint256 lastClaim = blockClaimed[tokenIds[i]] == 0 ? dungeonsStaker.blockStaked(tokenIds[i]) : blockClaimed[tokenIds[i]];
             blocks += block.number - lastClaim;
