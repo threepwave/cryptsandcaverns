@@ -1,6 +1,7 @@
 # Cairo
 env/
 nile/
+starknet-artifacts/
 *.deployments.txt
 accounts.json
 contract/tests
