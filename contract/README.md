@@ -132,13 +132,6 @@ Add the following to your `settings.json` (cmd+shift+p->settings (json)) file:
 2. Run command: `npx hardhat verify --network <blah> <contract> <arguments (optional)>`
 
 # Contract info
-## Rinkeby
-Fake Loot Rinkeby Address: 0xFF9C1b15B16263C61d017ee9F65C50e4AE0113D7
-
-Render Address: 0x05b0eE327FcEe826021E91A239FE619CF946E558
-Generator Address: 0xA0f363E26ca2ed2cBFD33F0Bc03766c5691eC86C
-Seeder Address: 0x2F613ac4E88dcCD9f7b0fC9df7F23a0D25D8eF32
-Dungeons Address: 0xFe6C93C510d9777245C45720cE4f42EA98e7b351
 
 ## Mainet
 Loot Address: 0xFF9C1b15B16263C61d017ee9F65C50e4AE0113D7
@@ -147,6 +140,23 @@ Render Address: 0xf701F9cd49216FA6111Ba4c8d41227178592E9B4
 Generator Address: 0x7c33284fe491A1212A99C0eDC499E282920a265c
 Seeder Address: 0xD2806cCE4be35ae7B84a25D11B5c2F1a6deeEdcB
 Dungeons Address: 0x86f7692569914B5060Ef39aAb99e62eC96A6Ed45
+
+
+## Rinkeby
+Fake Loot Rinkeby Address: 0xFF9C1b15B16263C61d017ee9F65C50e4AE0113D7
+
+Render Address: 0x05b0eE327FcEe826021E91A239FE619CF946E558
+Generator Address: 0xA0f363E26ca2ed2cBFD33F0Bc03766c5691eC86C
+Seeder Address: 0x2F613ac4E88dcCD9f7b0fC9df7F23a0D25D8eF32
+Dungeons Address: 0xFe6C93C510d9777245C45720cE4f42EA98e7b351
+
+
+## Goerli
+Render Address: 0xe791D0077ae1Eb8bD6e220B0ab50F045Be4b6729
+Generator Address: 0xF096e5050800c43A1cC351dbeCA5Ea456456c9A9
+Seeder Address: 0xcE318E819Fdf84d07e2F467dA98E2cC17a06b344
+Dungeons Address: 0x55819665a67D84D5A9476B7Ee0310c205a70fE75
+
 
 # Starknet / Cairo
 
