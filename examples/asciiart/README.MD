@@ -7,7 +7,9 @@ Installation:
 Clone this repository
 
 Install dependencies:
+
 pip install Web3
+
 pip install etherscan
 
 
