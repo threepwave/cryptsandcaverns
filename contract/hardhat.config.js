@@ -4,8 +4,8 @@ require("@nomiclabs/hardhat-etherscan");
 require("@shardlabs/starknet-hardhat-plugin");
 
 // Uncomment to deploy
-// require('hardhat-deploy');
-// require('hardhat-deploy-ethers');
+require('hardhat-deploy');
+require('hardhat-deploy-ethers');
 
 module.exports = {
   solidity: {
@@ -37,6 +37,10 @@ module.exports = {
     },
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.alchemy_key}`,
+      // accounts: [process.env.WALLET_PRIVATE_KEY],
+    },
+    goerli: {
+      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.alchemy_key}`,
       // accounts: [process.env.WALLET_PRIVATE_KEY],
     },
     starknetLocal: {
